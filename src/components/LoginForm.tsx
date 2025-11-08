@@ -40,8 +40,11 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
     try {
       const response = await AuthService.login(formData);
 
-      // FIXED: Now correctly saving response.data.user instead of response.data.user
-      AuthService.saveSession(response.data.access_token, response.data.user);
+      // FIXED: Extract token and user data correctly
+      // response.data contains both the user fields AND access_token
+      const { access_token, ...userData } = response.data;
+
+      AuthService.saveSession(access_token, userData);
 
       onLoginSuccess();
     } catch (err) {
